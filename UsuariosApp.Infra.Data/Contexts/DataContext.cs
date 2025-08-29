@@ -13,7 +13,7 @@ namespace UsuariosApp.Infra.Data.Contexts
         //Método para configurar o banco de dados
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("");
+            optionsBuilder.UseSqlServer("Data Source=localhost,1434;Initial Catalog=master;User ID=sa;Password=Coti@2025;Encrypt=False");
         }
 
         //Método para adicionar as classes de mapeamento
