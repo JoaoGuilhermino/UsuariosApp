@@ -11,6 +11,13 @@ namespace UsuariosApp.Infra.Data.Repositories
 {
     public class UsuarioRepository(DataContext dataContext) : IUsuarioRepository
     {
+
+        public void Add(Usuario usuario)
+        {
+            dataContext.Add(usuario);
+            dataContext.SaveChanges();
+        }
+
         public bool VerifyEmailExists(string email)
         {
             return dataContext
@@ -26,6 +33,7 @@ namespace UsuariosApp.Infra.Data.Repositories
                              && u.Senha.Equals(senha))
                     .SingleOrDefault();
         }
+
     }
 }
 
