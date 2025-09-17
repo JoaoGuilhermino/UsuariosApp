@@ -10,11 +10,13 @@ namespace UsuariosApp.Infra.Data.Contexts
 {
     public class DataContext : DbContext
     {
-        //Método para configurar o banco de dados
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //Método construtor
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer("Data Source=localhost,1434;Initial Catalog=master;User ID=sa;Password=Coti@2025;Encrypt=False");
+
         }
+        
+
 
         //Método para adicionar as classes de mapeamento
         protected override void OnModelCreating(ModelBuilder modelBuilder)

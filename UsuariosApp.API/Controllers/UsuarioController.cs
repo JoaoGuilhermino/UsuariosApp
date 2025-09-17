@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UsuariosApp.Domain.Dtos.Requests;
@@ -41,9 +42,55 @@ namespace UsuariosApp.API.Controllers
         }
 
         [HttpPost("autenticar")]
-        public IActionResult Autenticar()
+        [ProducesResponseType(typeof(AutenticarUsuarioResponse), 200)]
+        public IActionResult Autenticar([FromBody] AutenticarUsuarioRequest request)
         {
-            return Ok();
+            try
+            {
+                //Enviar para o domínio autenticar o usuário
+                var response = usuarioService.AutenticarUsuario(request);
+
+                //HTTP 200: OK
+                return StatusCode(200, response);
+            }
+            catch (ApplicationException e)
+            {
+                //HTTP 401: Unauthorized
+                return StatusCode(401, new { e.Message });
+            }
+            catch (Exception e)
+            {
+                //HTTP 500: Internal Server Error
+                return StatusCode(500, new { e.Message });
+            }
+        }
+
+        [Authorize] //Somente usuários autenticados!
+        [HttpGet("obter-dados")]
+        [ProducesResponseType(typeof(ObterDadosUsuarioResponse), 200)]
+        public IActionResult Get()
+        {
+            try
+            {
+                //capturar o email do usuário gravado no TOKEN JWT
+                var email = User.Identity.Name;
+
+                //buscar o usuário através do email
+                var usuario = usuarioService.ObterDadosUsuario(email);
+
+                //retornar sucesso
+                return StatusCode(200, usuario);
+            }
+            catch (ApplicationException e)
+            {
+                //HTTP 404: Not Found
+                return StatusCode(404, new { e.Message });
+            }
+            catch (Exception e)
+            {
+                //HTTP 500: Internal Server Error
+                return StatusCode(500, new { e.Message });
+            }
         }
     }
 }

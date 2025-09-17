@@ -1,6 +1,21 @@
 services:
 
- sqlserver:
+  usuariosapp:
+    build:
+      context: .
+      dockerfile: UsuariosApp.API/Dockerfile
+    container_name: usuariosapp_api
+    ports:
+      - "8081:8080"
+    depends_on:
+      - sqlserver
+    restart: always
+    networks:
+      - usuariosapp_network
+    environment:
+      - ConnectionStrings__DataContext=Data Source=sqlserver,1433;Initial Catalog=master;User ID=sa;Password=Coti@2025;Encrypt=False;
+
+  sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: usuariosapp_sqlserver
     ports:
@@ -19,5 +34,6 @@ volumes:
 networks:
   usuariosapp_network:
     driver: bridge
+
 
 
